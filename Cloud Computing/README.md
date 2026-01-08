@@ -286,3 +286,77 @@ Um gateway NAT é um serviço de Network Address Translation (NAT) que pode ser 
 
 Ao criar uma conta na AWS, você já encontra uma VPC padrão (default) em cada região (a própria AWS já deixou isso pré-provisionado). Uma VPC padrão vem com uma sub-rede pública em cada zona de disponibilidade, um gateway de internet e configurações para habilitar a resolução de DNS, permitindo que você possa iniciar imediatamente as instâncias do Amazon EC2.
 
+## Computação Distribuída
+
+### Troca de mensagens
+
+As partes que compõem um sistema distribuído interagem pela rede para trabalhar de forma cooperativa. As partes envolvidas trocam dados e mensagens, utilizando serviços de comunicação fornecidos pelo sistema hospedeiro (host) e adotando protocolos de comunicação para que possam entender uns aos outros. Essa comunicação se dá principalmente por não existir, na maioria dos casos, uma memória física compartilhada distribuída. Portanto, nos sistemas distribuídos, essa comunicação se dá exclusivamente por passagens de mensagens nos agentes envolvidos por meio de protocolos e métodos próprios para conversação entre os hosts.
+
+O modelo cliente/servidor é a base para os sistemas de computação distribuída. Nele, um processamento cooperativo de requisições submetidas por um cliente a um servidor que as processa retorna um resultado, estando esses recursos de cliente e servidor espalhados sobre vários computadores.
+
+### Comunicação em grupo
+
+Em comunicações com chamadas a procedimentos remotos (RPC – Remote Procedure Calls), envolvemos somente dois processos que permitem que programas chamem procedimentos localizados em outras máquinas.
+
+-> Transmissor suspenso
+
+Quando um processo na máquina A chama um procedimento na máquina B, o transmissor A será suspenso enquanto estiver executando o procedimento em B.
+
+-> Transporte de informações
+
+As informações são transportadas do transmissor para o receptor por parâmetros, e retornam o resultado da execução do procedimento. Assim, nenhuma troca de mensagens será visível ao programador.
+
+A ideia é fazer com que uma chamada de procedimento remoto pareça o mais possível com uma chamada local, tendo que ser transparente. Sendo assim, o procedimento de chamada não precisa estar ciente de que o procedimento enviado está em execução em uma máquina diferente, e vice-versa.
+
+A comunicação pode ser implementada usando os conceitos de multicast, broadcast ou unicast:
+
+-> Multicast: Os pacotes são enviados de uma só vez para todos os processos de um grupo.
+-> Broadcast: Os pacotes são enviados para todas as máquinas, e somente os processos que fazem parte do grupo não os descartam.
+-> Unicast: Transmissão estilo ponto a ponto, na qual o processo tem que enviar mensagem para cada membro do grupo.
+
+A maneira como será implementada a comunicação em grupo depende das características envolvidas na interligação dos equipamentos. Em algumas redes, é possível criar um endereço especial no qual várias máquinas podem escutar. Quando uma mensagem é enviada para um desses endereços, automaticamente ela será recebida por todas as máquinas que estão escutando esse endereço. Essa técnica é chamada de multicasting, e implementá-la é simples: basta atribuirmos um endereço de multicasting para cada grupo.
+
+Temos, ainda, redes que suportam a comunicação em broadcasting, na qual as mensagens contêm um determinado endereço que é escutado por todas as máquinas (broadcast global) ou direcionado a uma sub-rede específica (broadcast local).
+
+-> Grupos pares ou semelhantes: Todos os processos são tratados como iguais ou pares, e as decisões são tomadas coletivamente. Essa característica está relacionada à estrutura interna do grupo. Em alguns grupos, os processos são iguais ou semelhantes, nenhum processo é gerente e todas as decisões são feitas coletivamente.
+-> Grupos hierárquicos: Um processo é o coordenador e os demais estão subordinados a ele − uma visão mestre/escravo. Nesse caso, quando uma requisição é feita, seja por um cliente externo ou por um dos membros do grupo, ela é enviada ao coordenador. Este decide, então, qual dos processos do grupo é o mais indicado para executar a solicitação.
+
+### Código móvel
+
+O código móvel denomina um conjunto de tecnologias de linguagem e plataforma de sistemas distribuídos que suportam a construção de programas de computador instalados em computadores servidores.
+
+Os applets são, nos dias atuais, os principais responsáveis pela grande disseminação do conceito e das tecnologias de código móvel em geral.
+
+### Orientação a eventos
+
+Um evento pode ser definido como uma mudança significativa do seu estado. Um sistema de mensagens é um dos mecanismos mais comumente usados para troca de informações entre aplicações.
+
+Um sistema de mensagens atua como um componente de integração entre vários aplicativos. Um sistema orientado a eventos normalmente consiste em:
+
+-> Emissores (ou agentes): Os emissores têm a responsabilidade de detectar, reunir e transferir eventos. Um emissor de evento não conhece os consumidores, nem mesmo sabe se existe ou não um consumidor e, caso exista, não sabe como o evento será utilizado ou processado.
+-> Consumidores (ou coletores): Os coletores têm a responsabilidade de aplicar uma reação assim que um evento seja apresentado. A reação pode ou não ser totalmente fornecida pelo próprio coletor. Por exemplo, o coletor pode ter apenas a responsabilidade de filtrar, transformar e encaminhar o evento para outro componente ou pode fornecer uma reação independente a tal evento.
+-> Canais de eventos: Os canais de eventos são transmitidos dos emissores para consumidores. A implementação física dos canais pode ser baseada em componentes tradicionais, como middleware orientado à mensagem ou comunicação ponto a ponto.
+
+
+### Sistema de mensagens point-to-point (PTP)
+
+Em um modelo PTP, os produtores de mensagens são chamados de remetentes (senders) e os consumidores, de destinatários (receivers). Eles trocam mensagens para um destino denominado fila. Os remetentes produzem mensagens para uma fila e os destinatários consomem mensagens dessa fila.  Pode haver vários destinatários ouvindo na fila da mesma mensagem, mas apenas um deles a receberá. Note que também pode haver vários remetentes, que enviarão mensagens para a fila, mas estas serão recebidas por apenas um destinatário.
+
+### Sistema de mensagens publisher/subscribe (Pub/Sub)
+
+Um modelo de mensagem Pub/Sub é usado quando você precisa transmitir um evento ou mensagem para muitos consumidores. Ou seja, nesse modelo todos os assinantes que estiverem ouvindo o tópico receberão a mensagem. Além disso, estas podem ser retidas no tópico até que sejam entregues aos assinantes ativos. O ponto importante aqui é que vários assinantes podem consumir a mensagem.
+
+### Protocolo de enfileiramento de mensagens avançado (AQMP)
+
+Vamos, então, abordar um protocolo que se faz presente em produtos concentrados em Big Data, como o Apache Kafka: o AQMP (Advanced Queue Messaging Protocol).
+
+AQMP é um protocolo aberto para enfileiramento de mensagens assíncronas que se desenvolveu e amadureceu ao longo de vários anos. AQMP fornece um conjunto completo de funcionalidades de mensagens que pode ser usado para suportar cenários de mensagens bem avançados.
+
+### Replicação
+
+Em nosso dia a dia, o dado, que é considerado o novo petróleo por muitos especialistas, é um ativo fundamental para tomadas de decisões de empresas e instituições. Portanto, ter os dados replicados é de suma importância, pois garante suas duas razões principais: confiabilidade e desempenho. Além disso, de forma embutida, garante a disponibilidade desses dados.
+
+Seguindo o conceito da disponibilidade, conseguimos manter os sistemas operacionais mesmo na queda de uma das réplicas, pois pode-se redirecionar o acesso a qualquer uma das suas cópias disponíveis, além de garantir uma melhor proteção contra dados corrompidos. O desempenho também pode ser alcançado, uma vez que é possível ter várias cópias espalhadas, e um redirecionamento de acesso pode permitir que a carga de trabalho seja balanceada entre suas várias réplicas.
+
+
+
