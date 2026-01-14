@@ -358,5 +358,144 @@ Em nosso dia a dia, o dado, que é considerado o novo petróleo por muitos espec
 
 Seguindo o conceito da disponibilidade, conseguimos manter os sistemas operacionais mesmo na queda de uma das réplicas, pois pode-se redirecionar o acesso a qualquer uma das suas cópias disponíveis, além de garantir uma melhor proteção contra dados corrompidos. O desempenho também pode ser alcançado, uma vez que é possível ter várias cópias espalhadas, e um redirecionamento de acesso pode permitir que a carga de trabalho seja balanceada entre suas várias réplicas.
 
+### Kubernetes
 
+Para facilitar a tarefa de orquestrar microsserviços distribuídos em containers ao longo de clusters, várias soluções de orquestração foram criadas, entre elas a Kubernetes ou “k8s”, que é uma plataforma de código aberto, desenvolvida pelo Google e disponibilizada em 2014, portável e extensiva para o gerenciamento de cargas de trabalho e serviços distribuídos em containers, que facilita tanto a configuração declarativa quanto a automação dos containers Linux.
+
+Um cluster Kubernetes consiste em um conjunto de servidores de processamento, chamados nós, que executam aplicações containerizadas. Todo cluster possui ao menos um servidor de processamento (worker node).
+
+Para o uso do Kubernetes, é necessária a instalação do:
+
+-> Kubeadm: Ferramenta desenvolvida para fornecer "atalhos" de práticas recomendadas para a criação de clusters Kubernetes.
+-> Kubelet: Agente que é executado em casa nó no cluster. Ele garante que os containers estejam sendo executados em um Pod.
+-> Kubectl: Utilitário de linha de comando usado para se comunicar com o servidor da API do cluster.
+
+### Instalação e configuração do Kubernetes
+
+Para isso, precisaremos da configuração básica de processador com mínimo de 2 CPUs, 2GB ou mais de memória RAM por máquina, conectividade total entre as máquinas do cluster (neste caso internet – nuvem) e nome de host exclusivo, endereço MAC e product_uuid para cada nó.
+
+Se esses valores não forem exclusivos para cada nó, o processo de instalação pode falhar. Se você tiver mais de um adaptador de rede e seus componentes do Kubernetes não forem alcançáveis na rota padrão, recomendo adicionar rota (s) IP para que os endereços de cluster do Kubernetes passem pelo adaptador apropriado.
+
+Certifique-se de que o módulo br_netfilter esteja carregado. Isso pode ser feito executando lsmod | grep br_netfilter. Para carregá-lo explicitamente, chame sudo modprobe br_netfilter. 
+
+Como um requisito para o iptables do seu nó Linux ver corretamente o tráfego em ponte, você deve garantir que net.bridge.bridge-nf-call-iptables esteja definido como 1 em sua configuração sysctl.
+
+Passo a passo utilizando um distribuição baseada em Debian:
+
+```bash
+
+# Atualize o índice do pacote apt
+$ sudo apt-get update
+
+#instale os pacotes necessários para usar o repositório apt do Kubernetes.
+$ sudo apt-get install -y apt-transport-https ca-certificates curl
+
+# Baixe a chave de assinatura pública do Google Cloud.
+$ sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+
+# Adicione o repositório apt do Kubernetes.
+$ echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
+# Atualize o índice do pacote apt
+$ sudo apt-get update
+
+# Instale kubelet, kubeadm e kubectl
+$ sudo apt-get install -y kubelet kubeadm kubectl
+
+# Fixe suas versões.
+$ sudo apt-mark hold kubelet kubeadm kubectl
+```
+
+O kubelet agora está reiniciando a cada poucos segundos, enquanto espera em um loop de travamento que o kubeadm diga a ele o que fazer.
+
+Vamos agora configurar um driver cgroup!
+
+Tanto o tempo de execução do container quanto o kubelet têm uma propriedade chamada "driver cgroup", que é importante para o gerenciamento de cgroups em máquinas Linux.
+
+Importante: O kubeadm permite que você transmita uma estrutura KubeletConfiguration durante a inicialização do kubeadm. Esse KubeletConfiguration pode incluir o campo cgroupDriver que controla o driver cgroup do kubelet. Se não definirmos o campo cgroupDriver em KubeletConfiguration, o init do kubeadm o padronizará como systemd.
+
+Crie um balanceador de carga kube-apiserver com um nome que possa ser resolvido por um servidor DNS. Em um ambiente de nuvem, você deve colocar os nós do plano de controle atrás de um balanceador de carga de encaminhamento de TCP. Esse balanceador de carga distribui o tráfego para todos os nós do plano de controle íntegros em sua lista de destino. A verificação de saúde de um apiserver é uma verificação de TCP na porta em que o kube-apiserver escuta (valor padrão: 6443).
+
+A configuração keepalived consiste em dois arquivos: o arquivo de configuração de serviço e um script de verificação de saúde que será chamado periodicamente para verificar se o nó que contém o IP virtual ainda está operacional. Presume-se que os arquivos residam em um diretório / etc / keepalived. Observe que, no entanto, algumas distribuições do Linux podem mantê-los em outro lugar.
+
+### Introdução ao OpenShift
+
+O OpenShift é um produto de software de computador da Red Hat para implantação e gerenciamento de softwares baseados em container. Ele é uma distribuição suportada do Kubernetes usando Docker e ferramentas DevOps para desenvolvimento acelerado de aplicações.
+
+-> Red Hat OpenShift: Pode ser executada em qualquer cloud com recursos avançados para implantação em cloud híbrida.
+-> OpenShift Container Platform: Pode ser usado em infraestrutura on-premise e cloud púlica.
+
+Isso permite uma abordagem híbrida para a implantação de aplicações como soluções autogerenciadas. Todas as variantes da plataforma do OpenShift estão disponíveis para acelerar a produtividade do desenvolvedor e fornecer a portabilidade de aplicações em uma base consistente na cloud híbrida.
+
+O objetivo do OpenShift é fornecer a melhor experiência para desenvolvedores e administradores de sistemas de desenvolvimento, implantação e execução de aplicativos. Em outras palavras, OpenShift é uma camada além do Docker e do Kubernetes, que o torna acessível e fácil para o desenvolvedor para criar aplicativos e uma plataforma que é um sonho para as operadoras implantarem para cargas de trabalho de desenvolvimento e produção.
+
+### Instalação e configuração do OpenShift
+
+Passo a passo utilizando Linux baseado em Debian (Ubuntu desktop 20.4). Primeiro, vamos instalar o Docker CE em seu sistema para executar todos os serviços OKD em containers do Docker. Por padrão, a versão mais recente do Docker CE está disponível no repositório padrão do Ubuntu 20.04.
+
+```bash
+$ apt-get install docker.io -y
+
+$ systemctl start docker
+$ systemctl enable docker
+
+$ systemctl status docker
+
+# Vamos utilizar a versão V3.11.0 do OpenShift Origin. Você pode baixá-lo do repositório Git Hub usando o seguinte comando:
+$ wget https://github.com/openshift/origin/releases/download/v3.11.0/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
+
+# Assim que o download for concluído, extraia o arquivo baixado com o seguinte comando:
+$ tar -xvzf openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
+
+# Em seguida, altere o diretório para o diretório extraído e copie os binários kubectl e oc para o diretório /usr/local/ bin.
+$ cd openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit
+$ cp oc kubectl /usr/local/bin/
+
+# A seguir, verifique a instalação do utilitário cliente OpenShift usando o seguinte comando:
+$ oc version
+
+# Você deve ver a seguinte saída:
+
+# oc v3.11.0+0cbc58b
+# kubernetes v1.11.0+d4cacc0
+# features: Basic-Auth GSSAPI Kerberos SPNEGO
+
+# Em seguida, você precisará criar um novo arquivo daemon.json e permitir o uso do registro Insecure Docker.
+$ nano /etc/docker/daemon.json
+
+# Adicione a seguinte linha:
+
+# {
+#   "insecure-registries" : [ "172.30.0.0/16" ]
+# }
+
+# Salve, feche o arquivo e reinicie o serviço Docker para implementar as alterações.
+$ systemctl restart docker
+
+# Agora, inicie o cluster OpenShift Origin especificando o IP do seu sistema:
+$ oc cluster up --public-hostname=your-server-ip
+
+# Agora, faça login em seu cluster como usuário administrador com o seguinte comando:
+$ oc login -u system:admin
+
+# Em seguida, mude para o projeto padrão com o seguinte comando:
+$ oc project default
+
+# agora, verifique o status atual do seu projeto com o seguinte comando:
+$ oc status
+
+# Agora faça login no OpenShift com o usuário desenvolvedor com o seguinte comando
+$ oc login
+
+# Para criar um novo projeto, execute o seguinte comando
+$ oc new-project dev --display-name="Project - Dev" --description="My Project"
+```
+
+Agora, abra seu navegador e digite a URL [https://seu-ip-servidor:8443/console](https://seu-ip-servidor:8443/console).
+
+### Entendendo Docker
+
+Docker é uma plataforma aberta para desenvolvimento, envio e execução de aplicativos.
+
+O Docker permite que você separe seus aplicativos de sua infraestrutura para que possa entregar software rapidamente. Com o Docker, é possível gerenciar sua infraestrutura da mesma forma que gerencia seus aplicativos. Tirando proveito das metodologias do Docker para envio, teste e implantação de código rapidamente, você pode reduzir significativamente o atraso entre escrever o código e executá-lo na produção.
 
