@@ -499,3 +499,61 @@ Docker é uma plataforma aberta para desenvolvimento, envio e execução de apli
 
 O Docker permite que você separe seus aplicativos de sua infraestrutura para que possa entregar software rapidamente. Com o Docker, é possível gerenciar sua infraestrutura da mesma forma que gerencia seus aplicativos. Tirando proveito das metodologias do Docker para envio, teste e implantação de código rapidamente, você pode reduzir significativamente o atraso entre escrever o código e executá-lo na produção.
 
+### Fundamentos e conceitos da computação em nuvem
+
+Uma breve recapitulação sobre o que é um serviço de nuvem utilizando a definição atribuída pelo National Institute os Standards and Technology (NIST), órgão norte-americano responsável pela elaboração de padrões em Tecnologia da Informação. As recomendações da publicação 800-145 descrevem o serviço de nuvem com base em cinco características essenciais:
+
+### On-demand self-service
+
+Traduzindo, autoatendimento sob demanda. É uma alternativa moderna para o modelo original de se colocar um negócio no ar a partir da compra de computadores, espera pela logística de entrega e implantação dos softwares necessários ao negócio em si. Com o autoatendimento sob demanda, a empresa cliente pode provisionar o hardware e selecionar um sistema operacional a ser instalado nos equipamentos, além de outros sistemas, implantando tudo até mesmo com um único recurso humano atuando solitariamente, em questão de minutos e sem a interação física do humano com o provedor do serviço.
+
+### Broad network access
+
+Traduzindo, "amplo acesso à rede". A consideração aqui está calcada na disponibilidade de acesso à rede suficiente para atender a milhões de usuários finais, clientes do negócio da empresa, independentemente de suas plataformas de acesso (celulares, tablets, laptops ou estações de trabalho). Estamos falando de acesso à rede nos moldes dos grandes provedores de serviços de internet (ISP).
+
+### Resource pooling
+
+Milhares de computadores, operando de forma coordenada em formato de compartilhamento de recursos. Isto é, de forma a maximizar a utilização de CPU, memória e capacidade de armazenamento, em vez de ter um único servidor executando 10% de seus recursos na maior parte do tempo e podendo estourar 100% de sua capacidade em momentos específicos de pico.
+
+### Rapid elasticity
+
+Traduzindo, "elasticidade rápida". Confere capacidade ao sistema de aumentar e diminuir a quantidade de recursos de computação, desde um único servidor para milhares de servidores, eventualmente, e depois retornar para o uso de um único servidor, tudo de acordo com suas necessidades do negócio.
+
+### Measured service
+
+Traduzindo, "serviço medido". Baseia-se na possibilidade de a empresa pagar apenas pelos recursos consumidos, gerando um relatório de cobrança que mostre quais recursos foram utilizados e quanto deve ser pago por cada um desses recursos.
+
+### Software as a service (SaaS)
+
+Também chamado de software como serviço. Por esse modelo, o provedor do serviço oferece ao cliente a possibilidade de usar os aplicativos do provedor a partir de uma infraestrutura em nuvem. Toda a gestão da infraestrutura da nuvem, incluindo rede, servidores, sistemas operacionais, armazenadores e mesmo os recursos de aplicativos individuais, fica totalmente transparente para o cliente, salvo pela eventual e limitada configuração de alguns aplicativos específicos do usuário.
+
+### Platform as a service (PaaS)
+
+Também chamado de “plataforma como serviço”. Por intermédio desse modelo, o cliente do serviço recebe a capacidade de implantar na infraestrutura de nuvem seus próprios aplicativos, criados ou adquiridos, usando linguagens de programação, bibliotecas, serviços, bem como outras ferramentas suportadas pelo provedor do serviço de nuvem. Assim como no modelo SaaS, não são delegadas ao cliente as tarefas de gerenciamento e controle da infraestrutura de nuvem, incluindo rede, servidores, sistemas operacionais ou armazenadores, mas apenas o controle sobre os aplicativos criados, adquiridos ou implantados pelos próprios clientes e, possivelmente, sobre algumas definições de configuração do ambiente de hospedagem dos aplicativos.
+
+### Infrastructure as a service (IaaS)
+
+Também chamado de “infraestrutura como serviço”. Com esse modelo, o provedor do serviço oferece processamento, armazenamento, rede e outros recursos computacionais fundamentais onde o cliente consegue implantar e executar softwares aplicativos e sistemas operacionais específicos. O cliente não tem responsabilidade sobre o gerenciamento e controle da infraestrutura de nuvem em si. Fica sob encargo do cliente apenas o controle sobre os sistemas operacionais, armazenamento e aplicativos implantados, além de algum possível controle limitado a componentes de rede específicos, como firewalls de host.
+
+### Private cloud
+
+Traduzindo, “nuvem privada”. Representa a infraestrutura de nuvem que é provisionada para uso exclusivo por uma única organização. Pode-se pensar na organização como unidades de negócios compondo os diversos clientes diferentes, consumidores dos serviços. Uma nuvem privada pode ser de propriedade, gerenciada e operada pela própria organização, por terceiros ou por alguma combinação deles, podendo ser implantada fisicamente dentro ou fora das instalações da organização.
+
+### Community cloud
+
+Traduzindo, “nuvem comunitária”. Representa a infraestrutura de nuvem que é provisionada para uso por uma comunidade específica de clientes consumidores dos serviços, composta por entes que compartilhem as mesmas preocupações, como a missão, os requisitos de segurança, a política e as regras de conformidade.
+
+### Public cloud
+
+Traduzindo, “nuvem pública”. Representa a infraestrutura de nuvem que é provisionada para uso aberto ao público em geral. Uma nuvem pública pode ser gerenciada e operada por uma organização empresarial, acadêmica ou governamental proprietária, ou ainda por alguma combinação delas. É implantada sempre nas instalações de um provedor de nuvem, fisicamente fora das instalações do proprietário da nuvem em si.
+
+### Hybrid cloud
+
+Traduzindo, “nuvem híbrida”. Representa a infraestrutura de nuvem composta por duas ou mais infraestruturas de nuvem de modelos distintos:
+
+
+-> Privadas
+-> Comunitárias
+-> Públicas
+
+Em termos físicos, as diferentes infraestruturas são vistas como entidades únicas, mas são logicamente unidas por tecnologia proprietária ou alguma tecnologia padrão que permita a portabilidade de dados e aplicativos.
